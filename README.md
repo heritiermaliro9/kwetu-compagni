@@ -14,6 +14,8 @@ Après le déploiement, ouvrez `https://votre-site.netlify.app/api/status`. Le n
 
 Dans l’administration, vous pouvez publier un produit avec son image. Les images JPG, PNG et WebP jusqu’à 4 Mo sont conservées dans Netlify Blobs.
 
+Le numéro WhatsApp utilisé par les commandes et le formulaire de contact se modifie depuis **Administration → Paramètres WhatsApp**. Saisissez uniquement le format international en chiffres, par exemple `24370902655`.
+
 ## Déploiement Netlify
 
 - Importez ce projet depuis un dépôt Git (GitHub/GitLab) dans Netlify. Dans les paramètres de build, utilisez `npm install` comme commande de build ; le dossier de publication est `.`. Cette méthode est nécessaire pour déployer les fonctions admin ; Netlify Drop seul ne déploie que le site statique.

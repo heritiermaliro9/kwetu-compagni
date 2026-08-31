@@ -11,19 +11,16 @@
 <body>
 
 <header class="site-header">
-    <div class="container">
-        <div class="site-logo">
-            <img src="css/images/logo.png" alt="Logo KWETU COMPANY">
-            <h1>KWETU COMPANY</h1>
-        </div>
-
-        <nav class="site-nav">
+    <div class="container header-inner">
+        <a class="site-logo" href="index.html" aria-label="KWETU COMPANY - Accueil"><img src="css/images/logo.png" alt=""><span>KWETU <em>COMPANY</em></span></a>
+        <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+        <nav class="site-nav" aria-label="Navigation principale">
             <ul>
                 <li><a href="index.html">Accueil</a></li>
                 <li><a href="produits.html">Nos Produits</a></li>
-                <li><a href="articles.html">Articles</a></li>
+                <li><a href="articles.html">Actualités</a></li>
                 <li><a href="services.html">Services</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a class="active" href="contact.html">Contact</a></li>
             </ul>
         </nav>
         <button class="theme-toggle" type="button" aria-label="Activer le mode sombre">◐</button>
@@ -52,12 +49,12 @@
 
                 <div class="contact-item">
                     <h4>Téléphone</h4>
-                    <p><a href="tel:+243970902655">+243 970 902 655</a></p>
+                    <p><a id="phone-link" href="tel:+24370902655">+243 709 026 55</a></p>
                 </div>
 
                 <div class="contact-item">
                     <h4>WhatsApp</h4>
-                    <p><a href="https://wa.me/243970902655" target="_blank" rel="noopener noreferrer">Nous contacter sur WhatsApp</a></p>
+                    <p><a id="whatsapp-link" href="https://wa.me/24370902655" target="_blank" rel="noopener noreferrer">Nous contacter sur WhatsApp</a></p>
                 </div>
 
                 <div class="contact-item">
@@ -74,17 +71,21 @@
             <div class="contact-card contact-form">
                 <h3>Envoyez-nous un message</h3>
 
-                <form action="#" method="post">
+                <form id="contact-form">
                     <label for="nom">Nom complet</label>
                     <input type="text" id="nom" name="nom" placeholder="Entrez votre nom" required>
 
-                    <label for="email">Adresse Email</label>
-                    <input type="email" id="email" name="email" placeholder="Entrez votre email" required>
+                    <label for="email">Adresse e-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Entrez votre e-mail" required>
+
+                    <label for="subject">Sujet</label>
+                    <select id="subject" name="subject"><option>Demande d'information</option><option>Demande de prix</option><option>Commande ou disponibilité</option><option>Service après-vente</option><option>Autre demande</option></select>
 
                     <label for="message">Message</label>
                     <textarea id="message" name="message" rows="7" placeholder="Écrivez votre message ici..." required></textarea>
 
-                    <button type="submit">Envoyer le message</button>
+                    <button type="submit">Envoyer via WhatsApp</button>
+                    <p id="contact-message" class="form-message" role="status" aria-live="polite">Votre message s’ouvrira dans WhatsApp pour être envoyé.</p>
                 </form>
             </div>
         </div>
@@ -94,9 +95,19 @@
 <footer class="site-footer">
     <div class="container">
         <p>&copy; 2026 KWETU COMPANY - Tous droits réservés.</p>
-        <p>Contact : 243970902655 | heritiermaliro9@gmail.com</p>
+        <p id="footer-contact">Contact WhatsApp | heritiermaliro9@gmail.com</p>
     </div>
 </footer>
 
+<script>
+(() => {
+  let whatsappNumber = "24370902655";
+  const phoneLink = document.getElementById("phone-link"), whatsappLink = document.getElementById("whatsapp-link"), footer = document.getElementById("footer-contact"), form = document.getElementById("contact-form"), notice = document.getElementById("contact-message");
+  const format = n => "+" + n.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, "$1 $2 $3 $4");
+  const applyNumber = n => { if (!/^\d{8,15}$/.test(n)) return; whatsappNumber = n; phoneLink.href = "tel:+" + n; phoneLink.textContent = format(n); whatsappLink.href = "https://wa.me/" + n; footer.textContent = "Contact : +" + n + " | heritiermaliro9@gmail.com"; };
+  fetch("/api/settings").then(r => r.ok ? r.json() : {}).then(s => applyNumber(s.whatsappNumber)).catch(() => {});
+  form.addEventListener("submit", event => { event.preventDefault(); const values = Object.fromEntries(new FormData(form)); const text = ["Bonjour KWETU COMPANY,", "", "Je vous contacte via votre site.", "Nom : " + values.nom, "E-mail : " + values.email, "Sujet : " + values.subject, "", "Message :", values.message, "", "Merci de me répondre dès que possible.", "Cordialement,", values.nom].join("\n"); notice.textContent = "Ouverture de WhatsApp…"; window.open("https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(text), "_blank", "noopener"); });
+})();
+</script>
 </body>
 </html>

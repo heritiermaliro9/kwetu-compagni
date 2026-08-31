@@ -13,11 +13,14 @@ const defaultArticles = [
 ];
 export const products = () => getStore({ name: "kwetu-products", consistency: "strong" });
 export const articles = () => getStore({ name: "kwetu-articles", consistency: "strong" });
+export const settings = () => getStore({ name: "kwetu-settings", consistency: "strong" });
 export const images = () => getStore("kwetu-images");
 export async function listProducts() { const store = products(); return (await store.get("catalog", { type: "json" })) || defaults; }
 export async function saveProducts(items) { await products().setJSON("catalog", items); }
 export async function listArticles() { const items = (await articles().get("items", { type: "json" })) || defaultArticles; return items.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)); }
 export async function saveArticles(items) { await articles().setJSON("items", items); }
+export async function getSettings() { return (await settings().get("site", { type: "json" })) || { whatsappNumber: "24370902655" }; }
+export async function saveSettings(value) { await settings().setJSON("site", value); }
 const secret = () => process.env.ADMIN_TOKEN_SECRET || "";
 export function authenticate(request) { const token = request.headers.get("authorization")?.replace("Bearer ", "") || ""; const [body, sig] = token.split("."); if (!body || !sig || !secret()) return false; const expected = createHmac("sha256", secret()).update(body).digest("base64url"); if (expected.length !== sig.length || !timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) return false; try { return JSON.parse(Buffer.from(body, "base64url").toString()).exp > Date.now(); } catch { return false; } }
 export function token() { const body = Buffer.from(JSON.stringify({ exp: Date.now() + 1000 * 60 * 60 * 12 })).toString("base64url"); return body + "." + createHmac("sha256", secret()).update(body).digest("base64url"); }
