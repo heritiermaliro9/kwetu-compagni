@@ -1,0 +1,2 @@
+import { images } from "./shared.mjs";
+export default async request => { const key = new URL(request.url).searchParams.get("key"); if (!key || !/^[a-f0-9-]{36}$/.test(key)) return new Response("Not found", { status: 404 }); const blob = await images().get(key, { type: "blob" }); return blob ? new Response(blob, { headers: { "content-type": blob.type || "image/webp", "cache-control": "public, max-age=31536000, immutable" } }) : new Response("Not found", { status: 404 }); };

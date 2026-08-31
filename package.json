@@ -1,0 +1,7 @@
+{
+  "name": "kwetu-company-netlify",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "dependencies": { "@netlify/blobs": "^11.0.2" }
+}
