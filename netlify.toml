@@ -37,6 +37,24 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/articles"
+  to = "/.netlify/functions/articles"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/article"
+  to = "/.netlify/functions/article"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/admin/articles"
+  to = "/.netlify/functions/admin-articles"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/admin/*"
   [headers.values]
