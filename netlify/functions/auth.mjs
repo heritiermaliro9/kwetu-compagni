@@ -11,8 +11,9 @@ export default async request => {
   if (request.method !== "POST") return json({ error: "Méthode non autorisée." }, 405);
   try {
     const { username, password, accessKey } = await request.json();
-    const configured = process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD && process.env.ADMIN_ACCESS_KEY && process.env.ADMIN_TOKEN_SECRET;
-    if (!configured) return json({ error: "Administration non configurée. Ajoutez les variables Netlify requises." }, 503);
+    const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_ACCESS_KEY", "ADMIN_TOKEN_SECRET"];
+    const missing = required.filter(name => !process.env[name]);
+    if (missing.length) return json({ error: "Administration non configurée. Variables absentes : " + missing.join(", ") + ". Après vérification, redéployez le site." }, 503);
     const ok = same(username, process.env.ADMIN_USERNAME) && same(password, process.env.ADMIN_PASSWORD) && same(accessKey, process.env.ADMIN_ACCESS_KEY);
     return ok ? json({ token: token() }) : json({ error: "Identifiants, clé d’accès ou mot de passe incorrects." }, 401);
   } catch { return json({ error: "Demande de connexion invalide." }, 400); }

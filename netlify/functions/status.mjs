@@ -1,5 +1,5 @@
-export default async () => Response.json({
-  ok: true,
-  functions: true,
-  adminConfigured: Boolean(process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD && process.env.ADMIN_ACCESS_KEY && process.env.ADMIN_TOKEN_SECRET)
-}, { headers: { "cache-control": "no-store" } });
+const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD", "ADMIN_ACCESS_KEY", "ADMIN_TOKEN_SECRET"];
+export default async () => {
+  const missing = required.filter(name => !process.env[name]);
+  return Response.json({ ok: true, functions: true, adminConfigured: missing.length === 0, missing }, { headers: { "cache-control": "no-store" } });
+};
